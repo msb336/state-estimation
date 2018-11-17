@@ -12,13 +12,13 @@ int main ()
     srand(time(0));
     std::ofstream fileStream;
     fileStream.open("position.csv", std::ios::out);
-    fileStream << "time,input,vel reading, true pos,true vel,estimated pos, estimated vel, vel pos input\n";
+    fileStream << "time,input,measured velocity,measured acceleration,true pos, true vel, true accel,est pos, est vel, est accel\n";
     double dt = 0.01;
-    KalmanFilter kf(Eigen::Vector2d(0,0),dt), kf_truth(Eigen::Vector2d(0,0),dt);
+    KalmanFilter kf(Eigen::Vector3d(0,0,0),dt), kf_truth(Eigen::Vector3d(0,0,0),dt);
     double u = 0.5;
-    double v = 0;
-    Eigen::Vector2d position(0,0);
-    Eigen::Vector2d truth;
+    Eigen::Vector2d measure(0,0);
+    Eigen::Vector3d position(0,0,0);
+    Eigen::Vector3d truth;
     for (int t=0; t<1000; t++)
     {
         if (t < 100 )
@@ -28,14 +28,15 @@ int main ()
         else
         {u = -0.5;}
 
-        position = kf.filter(u,v*dt+position(0));
+        position = kf.filter(u,measure);
         truth = kf_truth.justState(u);
-        v = truth(1)*(1 + frand()*0.1);
-        std::cout << truth(0) << " " << truth(1) <<  " ....  " << position(0) << " " << position(1) << std::endl;
-        fileStream << t << "," << u << "," << v << "," 
-        << truth(0) << "," << truth(1) 
-        <<  "," << position(0) << "," << position(1) 
-        << "," << v*dt + position(0) << "\n";
+
+        measure << truth(1)*(1 + frand()*0.1), truth(2)*(1 + frand()*0.1);
+
+        fileStream << t << "," << u << "," << measure(0) << "," << measure(1) << "," <<
+        truth(0) << "," << truth(1) << "," << truth(2) <<  "," << 
+        position(0) << "," << position(1) <<  "," << position(2) << "\n";
+        
         
     }
 
