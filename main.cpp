@@ -1,18 +1,28 @@
-#include "include/KalmanFilter.hpp"
+#include "KalmanFilter.hpp"
+#include "SensorStruct.hpp"
 #include<fstream>
 #include <time.h>
 #include<iostream>
+
+
 double frand()
 {
     return 2*((double)rand() / RAND_MAX-0.5);
 }
 
+
 int main ()
 {
-    srand(time(0));
+    // Filewrite setup
     std::ofstream fileStream;
     fileStream.open("position.csv", std::ios::out);
     fileStream << "time,input,measured velocity,measured acceleration,true pos, true vel, true accel,est pos, est vel, est accel\n";
+
+    // Sensor setup
+    srand(time(0));
+
+
+
     double dt = 0.01;
     KalmanFilter kf(Eigen::Vector3d(0,0,0),dt), kf_truth(Eigen::Vector3d(0,0,0),dt);
     double u = 0.5;
