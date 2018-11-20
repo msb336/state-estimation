@@ -1,43 +1,32 @@
 #include "Eigen/Dense"
+#include "Robot.hpp"
+#include <iostream>
 
 class SystemDynamics
 {
 public:
-    typedef Eigen::Vector3d Vector3d;
-
-    SystemDynamics(const Eigen::Matrix<double,6,1>&, const double& );
+    SystemDynamics( Robot&, const Eigen::VectorXd&);
     ~SystemDynamics();
-    Eigen::Matrix<double,6,1> getState(const Eigen::Matrix<double,3,1>& );
+
+    Eigen::VectorXd getState(const Eigen::MatrixXd& );
 private:
-    Eigen::Matrix<double, 6, 6> A_;
-    Eigen::Matrix<double, 6, 3> B_;
-    Eigen::Matrix<double, 6,1> state_;
+    Robot* robot_;
+    Eigen::VectorXd state_;
 
 };
 
-SystemDynamics::SystemDynamics(const Eigen::Matrix<double,6,1>& start, const double& dt)
+SystemDynamics::SystemDynamics( Robot& robot_type, const Eigen::VectorXd& start )
 {
-    A_ <<   1,  dt,  0,  0,  0,  0,  
-            0,  1,  0,  0,  0,  0, 
-            0,  0,  1,  dt, 0,  0,
-            0,  0,  0,  1,  0,  0,
-            0,  0,  0,  0,  1,  dt,
-            0,  0,  0,  0,  0,  1;
-    B_ <<   0, 0,  0,
-            dt, 0,  0,
-            0,  0,  0,
-            0,  dt, 0,
-            0,  0,  0,
-            0,  0,  dt;  
-    state_ = start;
-}
-
+    robot_ = &robot_type;   state_=start;}
 SystemDynamics::~SystemDynamics()
 {
 }
 
-Eigen::Matrix<double,6,1> SystemDynamics::getState(const Eigen::Matrix<double,3,1>& u)
+Eigen::VectorXd SystemDynamics::getState(const Eigen::MatrixXd& u)
 {
-    state_ = A_*state_ + B_*u;
+    robot_->setMatrices ( state_ );
+
+
+    state_ = robot_->A_*state_ + robot_->B_*u;
     return state_;
 }

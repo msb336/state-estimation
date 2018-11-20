@@ -1,0 +1,24 @@
+#pragma once
+#include "Eigen/Dense"
+#include<iostream>
+class Robot
+{
+private:
+    /* data */
+public:
+    Robot(/* args */);
+    ~Robot();
+    Eigen::MatrixXd A_;
+    Eigen::MatrixXd B_;
+    virtual void setMatrices(const double&, const Eigen::VectorXd& ){};
+    virtual void setMatrices(const Eigen::VectorXd& ){std::cout<<"in the virtual function" << std::endl;};
+};
+
+Robot::Robot(/* args */)
+{
+}
+
+Robot::~Robot()
+{
+}
+
