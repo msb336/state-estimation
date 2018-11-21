@@ -7,14 +7,14 @@
 #include "KalmanFilter.hpp"
 
 
-
-
 int main ()
 {
+    srand(time(0));
+
     // Filewrite setup
     std::ofstream fileStream;
     fileStream.open("position.csv", std::ios::out);
-    fileStream << "time,kx,ky,kv,ka,ktheta,komega,u1,u2";//,x,y,v,a,theta,omega,omega_reading,spedometer\n";
+    fileStream << "time,kx,ky,kv,ka,ktheta,komega,u1,u2\n";//,x,y,v,a,theta,omega,omega_reading,spedometer\n";
     Eigen::VectorXd u;
     double dt = 0.01;
 
@@ -35,7 +35,7 @@ int main ()
         {u = Eigen::Vector2d(0,1);}
 
         auto position = true_system.getState(u);
-        Eigen::Vector2d measurement(position(3), position(5));
+        Eigen::Vector2d measurement(position(3)*(1+frand()), position(5)*(1+frand()));
         auto kfpos = kf.filter(u, measurement);
 
         write(&fileStream, t, kfpos, u);
