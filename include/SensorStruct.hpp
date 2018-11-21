@@ -4,22 +4,27 @@
 #include<iostream>
 
 
-enum class SENSOR { SPEDOMETER, IMU };
+enum class SENSOR { SPEDOMETER, ACCEL };
 
 struct SensorStruct
 {
     double refresh_rate;
-    Eigen::MatrixXd measurement;
-    Eigen::Vector3d H;
+    Eigen::VectorXd measurement;
+    Eigen::MatrixXd H;
+    Eigen::VectorXd R;
     SensorStruct(SENSOR sensor_type)
     {
         switch (sensor_type)
         {
-            case SENSOR::SPEDOMETER : 
-                H = Eigen::Vector3d(0,1,0);
+            case SENSOR::SPEDOMETER :
+                H.resize(1,6); 
+                H << 0,0,1,0,0,0;
+                R.resize(1); R << 5;
                 break;
-            case SENSOR::IMU :
-                H = Eigen::Vector3d(0,0,1);
+            case SENSOR::ACCEL :
+                H.resize(1,6); 
+                H << 0,0,0,1,0,0;
+                R.resize(1); R << 10;
                 break;
             default :
                 std::cerr << "unknown sensor type";
@@ -29,8 +34,4 @@ struct SensorStruct
     
 };
 
-struct SensorStack
-{
-    SensorStruct imu = SensorStruct(SENSOR::IMU);
-    SensorStruct spedometer = SensorStruct(SENSOR::SPEDOMETER);
-};
+typedef std::vector < SensorStruct >    SensorSet;
