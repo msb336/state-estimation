@@ -1,6 +1,7 @@
 #pragma once
 #include "Eigen/Dense"
 #include<iostream>
+
 class Robot
 {
 private:
@@ -15,11 +16,4 @@ public:
     virtual void setMatrices(const Eigen::VectorXd& ){std::cout<<"in the virtual function" << std::endl;};
 };
 
-Robot::Robot(/* args */)
-{
-}
-
-Robot::~Robot()
-{
-}
 

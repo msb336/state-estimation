@@ -29,7 +29,7 @@ int main ()
     {
         if (t < 200 )
         {u = Eigen::Vector2d(0.5,0);}
-        else if ( t < 400)
+        else if ( t < 400 )
         {u = Eigen::Vector2d(0,1);}
         else
         {u = Eigen::Vector2d(0,1);}
